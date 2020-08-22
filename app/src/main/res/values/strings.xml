@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RussianLowRider</string>
+    <string name="leftBtnText">Задняя ось</string>
+    <string name="rightBtnText">Передняя ось</string>
 </resources>

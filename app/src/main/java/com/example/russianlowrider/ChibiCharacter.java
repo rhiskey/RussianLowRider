@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 public class ChibiCharacter extends GameObject {
 
     // Velocity of game character (pixel/millisecond)
-    public static final float VELOCITY = 0.1f;
+    public static final float VELOCITY = 0.3f;
     private static final int ROW_TOP_TO_BOTTOM = 0;
     private static final int ROW_RIGHT_TO_LEFT = 1;
     private static final int ROW_LEFT_TO_RIGHT = 2;

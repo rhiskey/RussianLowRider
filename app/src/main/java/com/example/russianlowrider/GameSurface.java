@@ -7,12 +7,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,13 +30,16 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private final List<Explosion> explosionList = new ArrayList<>();
 
     //private ChibiCharacter chibi1;
+
+    private Background bgBitmap1;
+
     private GameThread gameThread;
     private int soundIdExplosion;
     private int soundIdBackground;
 
     private boolean soundPoolLoaded;
     private SoundPool soundPool;
-
+    private int streamIdBG;
 //    private boolean mediaPlayerLoaded;
 //    private MediaPlayer mediaPlayer;
 
@@ -52,7 +55,9 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         // Инициализация SFX
         this.initSoundPool();
+
     }
+
 
     private void initSoundPool() {
         // With Android API >= 21.
@@ -88,7 +93,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         });
 
         // Load the sound background.mp3 into SoundPool = 30 sec or 6 sec max
-        this.soundIdBackground = this.soundPool.load(this.getContext(), R.raw.moon_dust, 1);
+        this.soundIdBackground = this.soundPool.load(this.getContext(), R.raw.background, 1);
 
         // Hotline Background Long MP3
         //this.mediaPlayer = MediaPlayer.create(this.getContext(), R.raw.moon_dust);
@@ -105,7 +110,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
             float leftVolumn = 0.8f;
             float rightVolumn = 0.8f;
             // Play sound explosion.wav
-            int streamId = this.soundPool.play(this.soundIdExplosion, leftVolumn, rightVolumn, 1, 0, 1f);
+            int streamIdExplosion = this.soundPool.play(this.soundIdExplosion, leftVolumn, rightVolumn, 1, 0, 1f);
         }
     }
 
@@ -115,7 +120,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
             float rightVolumn = 0.8f;
             // Play sound background.mp3
             // Loop -1 = infinite
-            int streamId = this.soundPool.play(this.soundIdBackground, leftVolumn, rightVolumn, 1, -1, 1f);
+            streamIdBG = this.soundPool.play(this.soundIdBackground, leftVolumn, rightVolumn, 0, -1, 1f);
         }
 
 //        if(this.mediaPlayerLoaded){
@@ -201,21 +206,43 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
+//        Button lftBtn = new Button(this.getContext());
+//        lftBtn.setText("Пздц");
+//        lftBtn.setHeight(24);
+//        lftBtn.setX(100);
+//        lftBtn.setY(50);
+//
+//        lftBtn.draw(canvas);
+
+        // Отрисовка статического фона
+        this.bgBitmap1.draw(canvas);
+
         //this.chibi1.draw(canvas);
 
+        // Слой с персонажами
         for (ChibiCharacter chibi : chibiList) {
             chibi.draw(canvas);
         }
 
+        // Слой с эффектами
         for (Explosion explosion : this.explosionList) {
             explosion.draw(canvas);
         }
+
 
     }
 
     // Implements method of SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        //Background
+        Bitmap backgroundBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.bg);
+        this.bgBitmap1 = new Background(this, backgroundBitmap1);
+
+        Button leftButton = new Button(this.getContext());
+        Button rightButton = new Button(this.getContext());
+
+
         Bitmap chibiBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.chibi1);
         ChibiCharacter chibi1 = new ChibiCharacter(this, chibiBitmap1, 100, 50);
 
@@ -243,6 +270,8 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         while (true) {
             try {
                 this.gameThread.setRunning(false);
+                this.soundPool.stop(streamIdBG);
+                //this.soundPool.unload()
 
                 // Parent thread must wait until the end of GameThread.
                 this.gameThread.join();
