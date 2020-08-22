@@ -25,9 +25,11 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     // SFX
     private static final int MAX_STREAMS = 100;
     //Список персонажей на экране
-    private final List<ChibiCharacter> chibiList = new ArrayList<>();
+    private final List<ChibiCharacter> chibiList = new ArrayList<ChibiCharacter>();
     // Список взрывов
-    private final List<Explosion> explosionList = new ArrayList<>();
+    private final List<Explosion> explosionList = new ArrayList<Explosion>();
+    private final ArrayList<SpeedBump> bumps = new ArrayList<SpeedBump>();
+    private VolgaCar car;
 
     //private ChibiCharacter chibi1;
 
@@ -134,6 +136,16 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    private void checkCollision() { // перебираем все лежаки и проверяем не касается ли один
+        // из них волжанки
+        for (SpeedBump bump : bumps) {
+            if (bump.isCollision(car.x, car.y, car.size)) {
+                // игрок проиграл
+                GameThread.setRunning(false); // останавливаем игру
+                // TODO добавить анимацию взрыва
+            }
+        }
+    }
 
     public void update() {
         //Несколько персонажей
@@ -146,6 +158,9 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
             explosion.update();
         }
 
+//        car.update();
+//        bumps.update();
+
         Iterator<Explosion> iterator = this.explosionList.iterator();
         while (iterator.hasNext()) {
             Explosion explosion = iterator.next();
@@ -155,6 +170,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
             if (explosion.isFinish()) iterator.remove();
         }
     }
+
 
     /* обрабатывать события при прикосновении пользователя на экран, персонаж игры будет бежать
 в направлении нажатия. Вам нужно обработать это событие на классе  GameSurface.*/
@@ -217,6 +233,14 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         // Отрисовка статического фона
         this.bgBitmap1.draw(canvas);
 
+        //Отрисовываем тачку
+//        this.car.draw(canvas);
+
+//        //Генерируем лежаки
+//        for(SpeedBump bump: bumps) {
+//            bump.draw(canvas);
+//        }
+
         //this.chibi1.draw(canvas);
 
         // Слой с персонажами
@@ -239,9 +263,8 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap backgroundBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.bg);
         this.bgBitmap1 = new Background(this, backgroundBitmap1);
 
-        Button leftButton = new Button(this.getContext());
-        Button rightButton = new Button(this.getContext());
-
+//        Bitmap carBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.deloan_red_01);
+//        car = new VolgaCar(this, carBitmap1,450,1000,0);
 
         Bitmap chibiBitmap1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.chibi1);
         ChibiCharacter chibi1 = new ChibiCharacter(this, chibiBitmap1, 100, 50);

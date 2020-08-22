@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-/*        switch(v.getId()) { // определяем какая кнопка
+        switch (v.getId()) { // определяем какая кнопка
             case R.id.leftButton:
                 switch (event.getAction()) { // определяем нажата или отпущена
                     case MotionEvent.ACTION_DOWN:
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         break;
                 }
                 break;
-        }*/
+        }
         return true;
     }
 

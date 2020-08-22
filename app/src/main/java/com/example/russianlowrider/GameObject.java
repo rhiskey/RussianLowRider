@@ -30,6 +30,7 @@ public abstract class GameObject {
         this.height = this.HEIGHT / rowCount;
     }
 
+
     protected Bitmap createSubImageAt(int row, int col) {
         // createBitmap(bitmap, x, y, width, height).
         return Bitmap.createBitmap(image, col * width, row * height, width, height);

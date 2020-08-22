@@ -5,8 +5,10 @@ import android.view.SurfaceHolder;
 
 //GameThread это поток (thread) управляющий обновлением интерфейса в игре.
 public class GameThread extends Thread {
+    //private boolean firstTime = true;
 
-    private boolean running;
+    public static boolean gameRunning = true;
+    ;
     private GameSurface gameSurface;
     private SurfaceHolder surfaceHolder;
 
@@ -16,11 +18,15 @@ public class GameThread extends Thread {
         this.surfaceHolder = surfaceHolder;
     }
 
+    public static void setRunning(boolean running) {
+        gameRunning = running;
+    }
+
     @Override
     public void run() {
         long startTime = System.nanoTime();
 
-        while (running) {
+        while (gameRunning) {
             Canvas canvas = null;
             try {
                 // Get Canvas from Holder and lock it.
@@ -30,6 +36,8 @@ public class GameThread extends Thread {
                 synchronized (canvas) {
                     this.gameSurface.update();
                     this.gameSurface.draw(canvas);
+                    //TODO коллизия
+                    //this.gameSurface.checkCollision();
                 }
             } catch (Exception e) {
                 // Do nothing.
@@ -57,9 +65,5 @@ public class GameThread extends Thread {
             startTime = System.nanoTime();
             System.out.print(".");
         }
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
     }
 }
