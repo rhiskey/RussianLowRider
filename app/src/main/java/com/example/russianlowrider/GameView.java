@@ -48,9 +48,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     // For the волга
     private float positionX = 0.0f;
     private float positionY = 0.0f;
-    private float velocityX = 0.0f;
     private float velocityY = 0.0f;
-    private float accelerationX = 0.0f;
     private float accelerationY = 0.7f;
 
     // For the лежаки
@@ -83,9 +81,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            assert drawable != null;
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
+        assert drawable != null;
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                 drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -128,7 +128,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         bitmap = Bitmap.createScaledBitmap(bitmap, 250, 100, true);
 
         // For the лежак
-        pipeList = new ArrayList<Pipe>();
+        pipeList = new ArrayList<>();
 
         setKeepScreenOn(true);
     }
@@ -152,6 +152,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Draw the лежаки
         paint.setColor(colorPipe);
         paintUp.setColor(colorPipeUp);
+
         List<Integer> removeList = new ArrayList<>();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
@@ -178,8 +179,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         surfaceHolder.unlockCanvasAndPost(canvas);
 
-        // Update the data for the bird
-        positionX += velocityX;
+        // Update the data for the car
 
 
         //Падение вниз только когда нажали
@@ -188,12 +188,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             //velocityY -= 13.0f;
             isJumpPressed = false;
 
-        } else {
         }
 
         positionY += velocityY;
 
-        velocityX += accelerationX;
 
         //TODO Сделать подвеску
 
@@ -238,7 +236,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         isJumpPressed = true;
     }
 
-    public void setRotation(float rotateCW, float rotateCCW) {
+    public void setPneumo() {
 
     }
 
@@ -282,11 +280,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         // Check if the bird goes beyond the border
-        if ((positionY < 0.0f + 100.0f / 2.0f) || (positionY > measuredHeight - 100.0f / 2.0f)) {
-            return false;
-        }
-
-        return true;
+        return (!(positionY < 0.0f + 100.0f / 2.0f)) && (!(positionY > measuredHeight - 100.0f / 2.0f));
     }
 
     /**
@@ -323,9 +317,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // For the bird
         positionX = 0.0f;
         positionY = 0.0f;
-        velocityX = 0.0f;
         velocityY = 0.0f;
-        accelerationX = 0.0f;
         accelerationY = 0.7f;
 
         // For the pipes
