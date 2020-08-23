@@ -12,6 +12,7 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         // Инициализация SFX
         this.initSoundPool();
+
 
     }
 
