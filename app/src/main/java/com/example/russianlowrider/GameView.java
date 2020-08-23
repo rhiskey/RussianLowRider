@@ -19,7 +19,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-import com.daisy.flappybird.domain.Pipe;
+import com.example.russianlowrider.domain.Pipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +129,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paintUp.setAntiAlias(true);
         // For the bird
         bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.deloan_red_01);
+        //100 100 false
         bitmap = Bitmap.createScaledBitmap(bitmap, 250, 100, true);
 
         // For the pipes

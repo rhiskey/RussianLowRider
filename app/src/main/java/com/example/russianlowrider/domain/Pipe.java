@@ -1,4 +1,4 @@
-package com.daisy.flappybird.domain;
+package com.example.russianlowrider.domain;
 
 public class Pipe {
 
