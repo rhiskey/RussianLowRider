@@ -198,7 +198,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         positionY += velocityY;
 
         velocityX += accelerationX;
-
+//TODO на вращение забиваем
         rotationCCW += omegaCCW;
         rotationCW += omegaCW;
 
@@ -260,6 +260,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public boolean isAlive() {
         // Check if the bird hits the pipes
+        //TODO цикл "пока живой" переделать в цикл режима Круиз
         for (Pipe pipe : pipeList) {
             if (
                     (pipe.getPositionX() >= measuredWidth / 2.0f - pipeWidth / 2.0f - 100.0f / 2.0f) &&

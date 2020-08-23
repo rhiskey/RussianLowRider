@@ -122,7 +122,7 @@ public class GameActivity extends AppCompatActivity {
         bgMusic.setLooping(true);
 
         bgMusic.start();
-
+//TODO выпилить голосовое управление
         // Get the mode of the game from the StartingActivity
         if (getIntent().getStringExtra("Mode").equals("Touch")) {
             gameMode = TOUCH_MODE;
@@ -318,7 +318,7 @@ public class GameActivity extends AppCompatActivity {
 
         super.onBackPressed();
     }
-
+//TODO забить на хуйню с вращением, сделать именно механику с высотой
     public void onLeftBtnClick(View view) {
         //Поднять зад пневму
         gameView.setRotation(0, 1.0f);
