@@ -19,9 +19,9 @@ import android.widget.NumberPicker;
 
 public class StartingActivity extends AppCompatActivity {
 
-    private static final int RECORD_AUDIO_PERMISSION_REQUEST_CODE = 0x00;
+/*    private static final int RECORD_AUDIO_PERMISSION_REQUEST_CODE = 0x00;
 
-    private int volumeThreshold;
+    private int volumeThreshold;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +31,10 @@ public class StartingActivity extends AppCompatActivity {
         // Hide the status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+/*
         // Get the volume threshold
         SharedPreferences settings = getPreferences(0);
-        volumeThreshold = settings.getInt("VolumeThreshold", 50);
+        volumeThreshold = settings.getInt("VolumeThreshold", 50);*/
     }
 
     public void goToTouchActivity(View view) {
@@ -43,7 +43,7 @@ public class StartingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToVoiceActivity(View view) {
+/*    public void goToVoiceActivity(View view) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -55,9 +55,9 @@ public class StartingActivity extends AppCompatActivity {
             intent.putExtra("VolumeThreshold", volumeThreshold);
             startActivity(intent);
         }
-    }
+    }*/
 
-    @Override
+ /*   @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -117,6 +117,6 @@ public class StartingActivity extends AppCompatActivity {
         });
         alertDialog.setCancelable(false);
         alertDialog.show();
-    }
+    }*/
 
 }

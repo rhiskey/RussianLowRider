@@ -32,13 +32,13 @@ public class GameActivity extends AppCompatActivity {
     private TextView textViewScore;
     private boolean isGameOver;
     private boolean isSetNewTimerThreadEnabled;
-    private int volumeThreshold;
+//    private int volumeThreshold;
     private Thread setNewTimerThread;
     private AlertDialog.Builder alertDialog;
     private MediaPlayer mediaPlayer;
     private MediaPlayer bgMusic;
     private int gameMode;
-    private AudioRecorder audioRecorder;
+//    private AudioRecorder audioRecorder;
     private Timer timer;
     private Handler handler = new Handler() {
         @Override
@@ -60,9 +60,9 @@ public class GameActivity extends AppCompatActivity {
                             timer.cancel();
                             timer.purge();
                         } else {
-                            audioRecorder.isGetVoiceRun = false;
+        /*                    audioRecorder.isGetVoiceRun = false;
                             audioRecorder = null;
-                            System.gc();
+                            System.gc();*/
                         }
 
                         alertDialog = new AlertDialog.Builder(GameActivity.this);
@@ -127,9 +127,9 @@ public class GameActivity extends AppCompatActivity {
         if (getIntent().getStringExtra("Mode").equals("Touch")) {
             gameMode = TOUCH_MODE;
         } else {
-            gameMode = VOICE_MODE;
+/*            gameMode = VOICE_MODE;
 
-            volumeThreshold = getIntent().getIntExtra("VolumeThreshold", 50);
+            volumeThreshold = getIntent().getIntExtra("VolumeThreshold", 50);*/
         }
 
         // Set the Timer
@@ -176,8 +176,8 @@ public class GameActivity extends AppCompatActivity {
                 }
             });
         } else {
-            audioRecorder = new AudioRecorder();
-            audioRecorder.getNoiseLevel();
+/*            audioRecorder = new AudioRecorder();
+            audioRecorder.getNoiseLevel();*/
         }
     }
 
@@ -216,16 +216,15 @@ public class GameActivity extends AppCompatActivity {
             timer.purge();
         }
 
-        if (audioRecorder != null) {
+/*        if (audioRecorder != null) {
             audioRecorder.isGetVoiceRun = false;
             audioRecorder = null;
-        }
+        }*/
 
         isSetNewTimerThreadEnabled = false;
         bgMusic.stop();
         bgMusic.seekTo(0);
-        //bgMusic.start();
-        //bgMusic.
+
         super.onDestroy();
     }
 
@@ -300,8 +299,8 @@ public class GameActivity extends AppCompatActivity {
             });
             setNewTimerThread.start();
         } else {
-            audioRecorder = new AudioRecorder();
-            audioRecorder.getNoiseLevel();
+/*            audioRecorder = new AudioRecorder();
+            audioRecorder.getNoiseLevel();*/
         }
         bgMusic.seekTo(0);
         bgMusic.start();
@@ -329,6 +328,7 @@ public class GameActivity extends AppCompatActivity {
         gameView.setRotation(1.0f, 0);
     }
 
+/*
     private class AudioRecorder {
 
         private static final String TAG = "AudioRecord";
@@ -401,5 +401,6 @@ public class GameActivity extends AppCompatActivity {
             }).start();
         }
     }
+*/
 
 }
