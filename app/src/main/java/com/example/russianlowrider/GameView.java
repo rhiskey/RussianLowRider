@@ -119,7 +119,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void init() {
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
-
         setZOrderOnTop(true);
         surfaceHolder.setFormat(PixelFormat.TRANSPARENT);
 
