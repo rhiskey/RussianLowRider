@@ -1,8 +1,11 @@
 package com.example.russianlowrider;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -11,7 +14,9 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.appcompat.widget.AppCompatDrawableManager;
 
+import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.graphics.Canvas;
@@ -28,6 +33,16 @@ import java.util.List;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+    final long UPDATE_MILLIS = 30;
+    // Screen Params
+    int screenWidth, screenHeight, newWidth, newHeight;
+    int cloudX = 0, towerX = 0, asphaltX = 0;
+    int carX, carY, carFrame = 0;
+    Bitmap cloud, tower, asphalt;
+    //Анимация машинки из 12 спрайтов
+    Bitmap car[] = new Bitmap[12];
+    Handler handler;
+    Runnable runnable;
 
     // The colors
     private static final int colorPipe = Color.parseColor("#696969");
@@ -125,10 +140,35 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setAntiAlias(true);
         paintUp = new Paint();
         paintUp.setAntiAlias(true);
+
+        //tower = BitmapFactory.decodeResource(getResources(), R.drawable.towers);
+        cloud = BitmapFactory.decodeResource(getResources(), R.drawable.clouds);
+        //asphalt = BitmapFactory.decodeResource(getResources(), R.drawable.asphalt);
+/*        car[0] = BitmapFactory.decodeResource(getResources(), R.drawable.car0);
+        car[1] = BitmapFactory.decodeResource(getResources(), R.drawable.car1);*/
+
+        Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
+
+        //Scale Images
+        float height = cloud.getHeight();
+        float width = cloud.getWidth();
+        float ratio = width / height;
+        newHeight = screenHeight;
+        newWidth = (int) (ratio * screenHeight);
+
+        cloud = Bitmap.createScaledBitmap(cloud, newWidth, newHeight, false);
+//        tower = Bitmap.createScaledBitmap(tower, newWidth, newHeight, false);
+//        asphalt = Bitmap.createScaledBitmap(asphalt, newWidth, newHeight, false);
+//
+
         // For the волга
         bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.deloan_red_01);
         //100 100 false
-        bitmap = Bitmap.createScaledBitmap(bitmap, resizedCarWidth, resizedCarHeight, true);
+        bitmap = Bitmap.createScaledBitmap(bitmap, resizedCarWidth, resizedCarHeight, false);
 
         // For the лежак
         pipeList = new ArrayList<>();
@@ -150,6 +190,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         // Draw the car
+        //TODO отрисовывать внизу экрана ровно на асфальте
+//        carX = screenWidth / 2 -200;
+//        carY = screenHeight - 300;
+        //Эффект скроллинга
+        cloudX -= 2; //Чем больше число тем быстрее
+        if (cloudX < -newWidth) {
+            cloudX = 0;
+        }
+        canvas.drawBitmap(cloud, cloudX, 0, null);
+        if (cloudX < screenWidth - newWidth) {
+            canvas.drawBitmap(cloud, cloudX + newWidth, 0, null);
+        }
+//        towerX -= 1;
+//        if (towerX<-newWidth) {
+//            towerX = 0;
+//        }
+//        canvas.drawBitmap(tower, towerX+newWidth, 0,null);
+
         canvas.drawBitmap(bitmap, positionX - resizedCarWidth / 2.0f, positionY - resizedCarHeight / 2.0f, null);
 
         // Draw the лежаки
