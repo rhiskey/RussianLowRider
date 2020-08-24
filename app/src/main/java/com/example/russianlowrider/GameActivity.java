@@ -110,6 +110,7 @@ public class GameActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, R.raw.sound_score);
         mediaPlayer.setLooping(false);
 
+        //.menuMusic.stop();
         bgMusic = MediaPlayer.create(this, R.raw.moon_dust);
         bgMusic.setLooping(true);
 
@@ -200,6 +201,8 @@ public class GameActivity extends AppCompatActivity {
         }*/
 
         isSetNewTimerThreadEnabled = false;
+
+
         bgMusic.stop();
         bgMusic.seekTo(0);
 

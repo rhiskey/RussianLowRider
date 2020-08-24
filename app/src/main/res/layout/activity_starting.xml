@@ -17,7 +17,7 @@
         android:layout_marginTop="100dp"
         android:contentDescription="@string/applogo"
         android:src="@drawable/ic_title"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <!-- The two buttons -->
     <LinearLayout

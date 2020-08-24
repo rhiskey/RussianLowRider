@@ -27,6 +27,7 @@ import android.view.View;
 import com.example.russianlowrider.domain.Pipe;
 import com.example.russianlowrider.domain.SpeedBumps;
 import com.example.russianlowrider.domain.CarActor;
+import com.example.russianlowrider.utills.inGameButtons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     final long UPDATE_MILLIS = 30;
     // Screen Params
     int screenWidth, screenHeight, newWidth, newHeight;
-    int cloudX = 0, towerX = 0, asphaltX = 0;
+    private static final float gap = 450.0f;
     int carX, carY, carFrame = 0;
-    Bitmap cloud, tower, asphalt;
+    int cloudX = 0, towerX = 0, asphaltX = 0, bgGameX = 0;
     //Анимация машинки из 12 спрайтов
     Bitmap car[] = new Bitmap[12];
     Handler handler;
@@ -49,7 +50,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     //Transparent
     private static final int colorPipeUp = Color.parseColor("#00FFFFFF");
     private static final int interval = 150;
-    private static final float gap = 450.0f;
+    Bitmap cloud, tower, asphalt, bgGame, leftButton, rightButton;
     private static final float base = 100.0f;
     private static final float pipeVelocity = 3.0f;
     private static boolean isJumpPressed = false;
@@ -141,6 +142,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paintUp = new Paint();
         paintUp.setAntiAlias(true);
 
+        bgGame = BitmapFactory.decodeResource(getResources(), R.drawable.bg_streets_of_rage);
         //tower = BitmapFactory.decodeResource(getResources(), R.drawable.towers);
         cloud = BitmapFactory.decodeResource(getResources(), R.drawable.clouds);
         //asphalt = BitmapFactory.decodeResource(getResources(), R.drawable.asphalt);
@@ -160,6 +162,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         newHeight = screenHeight;
         newWidth = (int) (ratio * screenHeight);
 
+        bgGame = Bitmap.createScaledBitmap(bgGame, newWidth, newHeight, false);
         cloud = Bitmap.createScaledBitmap(cloud, newWidth, newHeight, false);
 //        tower = Bitmap.createScaledBitmap(tower, newWidth, newHeight, false);
 //        asphalt = Bitmap.createScaledBitmap(asphalt, newWidth, newHeight, false);
@@ -172,6 +175,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // For the лежак
         pipeList = new ArrayList<>();
+
+        //Buttons
+        //let bt1 = inGameButtons.inGameButtonLeft(getContext(),R.drawable.btLeft);
 
         setKeepScreenOn(true);
     }
@@ -194,6 +200,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //        carX = screenWidth / 2 -200;
 //        carY = screenHeight - 300;
         //Эффект скроллинга
+        //TODO отрисовать плавно новые справа склеивать
+        bgGameX -= 1;
+        if (bgGameX < -newWidth) {
+            bgGameX = 0;
+        }
+        canvas.drawBitmap(bgGame, bgGameX, 0, null);
+        if (bgGameX < screenWidth - newWidth) {
+            canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
+        }
+
         cloudX -= 2; //Чем больше число тем быстрее
         if (cloudX < -newWidth) {
             cloudX = 0;
@@ -222,11 +238,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 removeList.add(index);
             } else {
                 // Draw the upper part of the pipe
-                canvas.drawRect(pipe.getPositionX() - pipeWidth / 2.0f,
+
+/*                canvas.drawRect(pipe.getPositionX() - pipeWidth / 2.0f,
                         0.0f,
                         pipe.getPositionX() + pipeWidth / 2.0f,
                         measuredHeight - pipe.getHeight() - gap,
-                        paintUp);
+                        paint);*/
 
                 // Draw the lower part of the pipe
                 canvas.drawRect(pipe.getPositionX() - pipeWidth / 2.0f,
@@ -402,6 +419,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void addPipe() {
         pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
                 base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
+//                base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
     }
 
 

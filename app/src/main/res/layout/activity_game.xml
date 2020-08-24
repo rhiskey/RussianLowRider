@@ -5,18 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- The GameView -->
+
+    <!-- The TextView to display the score -->
+
     <SurfaceView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_city2" />
+        android:layout_height="match_parent" />
 
-    <!-- The GameView -->
     <com.example.russianlowrider.GameView
         android:id="@+id/game_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!-- The TextView to display the score -->
 
     <TextView
         android:id="@+id/text_view_score"
@@ -34,7 +34,7 @@
         android:layout_marginTop="0dp"
         android:gravity="bottom|center_horizontal"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <ImageButton
             android:id="@+id/imgBTN_left"
@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:alpha="0.9"
             android:contentDescription="@string/leftInGameButton"
-            android:focusableInTouchMode="true"
+            android:focusableInTouchMode="false"
             android:onClick="onLeftBtnClick"
             app:srcCompat="@android:drawable/stat_sys_download" />
 
@@ -62,7 +62,7 @@
             android:layout_weight="1"
             android:alpha="0.9"
             android:contentDescription="@string/rightInGameButton"
-            android:focusableInTouchMode="true"
+            android:focusableInTouchMode="false"
             android:onClick="onRightBtnClick"
             app:srcCompat="@android:drawable/stat_sys_upload" />
 
