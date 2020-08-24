@@ -20,6 +20,8 @@ import android.graphics.Paint;
 import android.view.View;
 
 import com.example.russianlowrider.domain.Pipe;
+import com.example.russianlowrider.domain.SpeedBumps;
+import com.example.russianlowrider.domain.CarActor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     // The current score
     private int score = 0;
     // For the волга
+    private int resizedCarHeight = 100; //После ресайза
+    private int resizedCarWidth = 250;
     private float positionX = 0.0f;
     private float positionY = 0.0f;
     private float velocityY = 0.0f;
@@ -56,13 +60,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private float pipeWidth = 100.0f;
     private List<Pipe> pipeList;
 
+
     public GameView(Context context) {
         super(context);
 
         // Initialize
         init();
     }
-
 
     public GameView(Context context, AttributeSet a) {
         super(context, a);
@@ -124,7 +128,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // For the волга
         bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.deloan_red_01);
         //100 100 false
-        bitmap = Bitmap.createScaledBitmap(bitmap, 250, 100, true);
+        bitmap = Bitmap.createScaledBitmap(bitmap, resizedCarWidth, resizedCarHeight, true);
 
         // For the лежак
         pipeList = new ArrayList<>();
@@ -146,7 +150,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         // Draw the car
-        canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
+        canvas.drawBitmap(bitmap, positionX - resizedCarWidth / 2.0f, positionY - resizedCarHeight / 2.0f, null);
 
         // Draw the лежаки
         paint.setColor(colorPipe);
@@ -220,7 +224,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         measuredWidth = getMeasuredWidth();
         measuredHeight = getMeasuredHeight();
 
-        // Set the initial position
+        // Set the initial position - середина экрана?
         setPosition(measuredWidth / 2.0f, measuredHeight / 2.0f);
 
         // Add the initial pipe
@@ -254,17 +258,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //TODO цикл "пока живой" переделать в цикл режима Круиз
         for (Pipe pipe : pipeList) {
             if (
-                    (pipe.getPositionX() >= measuredWidth / 2.0f - pipeWidth / 2.0f - 100.0f / 2.0f) &&
-                            (pipe.getPositionX() <= measuredWidth / 2.0f + pipeWidth / 2.0f + 100.0f / 2.0f)
+                // Коллизизия - подогнать размеры, здесь из расчета модельки 100x100dp
+                    (pipe.getPositionX() >= measuredWidth / 2.0f - pipeWidth / 2.0f - resizedCarWidth / 2.0f) &&
+                            (pipe.getPositionX() <= measuredWidth / 2.0f + pipeWidth / 2.0f + resizedCarWidth / 2.0f)
             ) {
                 if (
+                    //TODO 50.0f нужно поменяьт на другое значение (макс высоту модельки машины)
                     //(positionY <= measuredHeight - pipe.getHeight() - gap + 50.0f / 2.0f) //||
                         (positionY >= measuredHeight - pipe.getHeight() - 50.0f / 2.0f) //Только нижняя
                 ) {
                     return false;
                 } else {
                     if (pipe.getPositionX() - pipeVelocity <
-                            measuredWidth / 2.0f - pipeWidth / 2.0f - 100.0f / 2.0f) {
+                            measuredWidth / 2.0f - pipeWidth / 2.0f - resizedCarWidth / 2.0f) {
                         score++;
 
                         // Update the score in MainActivity
@@ -278,8 +284,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        // Check if the bird goes beyond the border
-        return (!(positionY < 0.0f + 100.0f / 2.0f)) && (!(positionY > measuredHeight - 100.0f / 2.0f));
+        // Check if the car goes beyond the border
+        return (!(positionY < 0.0f + resizedCarHeight / 2.0f)) && (!(positionY > measuredHeight - resizedCarHeight / 2.0f));
     }
 
     /**
