@@ -11,7 +11,8 @@
 
     <SurfaceView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_streets_of_rage" />
 
     <com.example.russianlowrider.GameView
         android:id="@+id/game_view"
@@ -23,9 +24,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        android:background="#00000000"
+        android:background="@color/cardview_shadow_end_color"
         android:text="@string/scoreInGame"
-        android:textColor="#EE000000"
+        android:textColor="#EEE6E6E6"
         android:textSize="40sp" />
 
     <LinearLayout

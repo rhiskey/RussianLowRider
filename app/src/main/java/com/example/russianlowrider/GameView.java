@@ -34,11 +34,11 @@ import java.util.List;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
-    final long UPDATE_MILLIS = 30;
+    private static final int colorAsphalt = Color.parseColor("#2A2922");
     // Screen Params
     int screenWidth, screenHeight, newWidth, newHeight;
-    private static final float gap = 450.0f;
-    int carX, carY, carFrame = 0;
+    private static final float base = 50.0f; //100
+    private static int interval = 150;
     int cloudX = 0, towerX = 0, asphaltX = 0, bgGameX = 0;
     //Анимация машинки из 12 спрайтов
     Bitmap car[] = new Bitmap[12];
@@ -47,12 +47,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     // The colors
     private static final int colorPipe = Color.parseColor("#696969");
+    private static float pipeVelocity = 3.0f;
     //Transparent
     private static final int colorPipeUp = Color.parseColor("#00FFFFFF");
-    private static final int interval = 150;
+    final long UPDATE_MILLIS = 10;
     Bitmap cloud, tower, asphalt, bgGame, leftButton, rightButton;
-    private static final float base = 100.0f;
-    private static final float pipeVelocity = 3.0f;
+    int groundPosition;
+    //private static final float gap = 650.0f; //450
+    int carX, carY, carFrame = 0;
     private static boolean isJumpPressed = false;
 
     private float measuredWidth;
@@ -64,8 +66,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     // The current score
     private int score = 0;
     // For the волга
-    private int resizedCarHeight = 100; //После ресайза
-    private int resizedCarWidth = 250;
+    private int resizedCarHeight = 196; //После ресайза
+    private int resizedCarWidth = 530;
     private float positionX = 0.0f;
     private float positionY = 0.0f;
     private float velocityY = 0.0f;
@@ -144,7 +146,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         bgGame = BitmapFactory.decodeResource(getResources(), R.drawable.bg_streets_of_rage);
         //tower = BitmapFactory.decodeResource(getResources(), R.drawable.towers);
+
         cloud = BitmapFactory.decodeResource(getResources(), R.drawable.clouds);
+
         //asphalt = BitmapFactory.decodeResource(getResources(), R.drawable.asphalt);
 /*        car[0] = BitmapFactory.decodeResource(getResources(), R.drawable.car0);
         car[1] = BitmapFactory.decodeResource(getResources(), R.drawable.car1);*/
@@ -155,6 +159,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         screenWidth = size.x;
         screenHeight = size.y;
 
+        groundPosition = screenHeight - screenHeight / 4;
+
         //Scale Images
         float height = cloud.getHeight();
         float width = cloud.getWidth();
@@ -163,7 +169,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         newWidth = (int) (ratio * screenHeight);
 
         bgGame = Bitmap.createScaledBitmap(bgGame, newWidth, newHeight, false);
-        cloud = Bitmap.createScaledBitmap(cloud, newWidth / 2, newHeight / 2, false);
+        cloud = Bitmap.createScaledBitmap(cloud, newWidth, newHeight, false);
 //        tower = Bitmap.createScaledBitmap(tower, newWidth, newHeight, false);
 //        asphalt = Bitmap.createScaledBitmap(asphalt, newWidth, newHeight, false);
 //
@@ -199,6 +205,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //TODO отрисовывать внизу экрана ровно на асфальте
 //        carX = screenWidth / 2 -200;
 //        carY = screenHeight - 300;
+
         //Эффект скроллинга
         //TODO отрисовать плавно новые справа склеивать
         bgGameX -= 1;
@@ -218,13 +225,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (cloudX < screenWidth - newWidth) {
             canvas.drawBitmap(cloud, cloudX + newWidth, 0, null);
         }
-//        towerX -= 1;
-//        if (towerX<-newWidth) {
-//            towerX = 0;
-//        }
-//        canvas.drawBitmap(tower, towerX+newWidth, 0,null);
 
-        canvas.drawBitmap(bitmap, positionX - resizedCarWidth / 2.0f, positionY - resizedCarHeight / 2.0f, null);
+
+        canvas.drawBitmap(bitmap, screenWidth / 4.0f - resizedCarWidth / 2.0f, groundPosition - resizedCarHeight, null);
+//        canvas.drawBitmap(bitmap, positionX - resizedCarWidth / 2.0f, positionY - resizedCarHeight / 2.0f, null);
 
         // Draw the лежаки
         paint.setColor(colorPipe);
@@ -247,7 +251,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 // Draw the lower part of the pipe
                 canvas.drawRect(pipe.getPositionX() - pipeWidth / 2.0f,
-                        measuredHeight - pipe.getHeight(),
+                        groundPosition - pipe.getHeight(),
                         pipe.getPositionX() + pipeWidth / 2.0f,
                         measuredHeight,
                         paint);
@@ -259,11 +263,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // рисуем прямоугольник
         // левая верхняя точка (200,150), нижняя правая (400,200)
-        canvas.drawRect(0, screenHeight - screenHeight / 4, screenWidth, screenHeight, paint);
+        Paint aspPaint = new Paint();
+        aspPaint.setColor(colorAsphalt);
+        canvas.drawRect(0, groundPosition, screenWidth, screenHeight, aspPaint);
 
         surfaceHolder.unlockCanvasAndPost(canvas);
 
         // Update the data for the car
+
+
+//        towerX -= 1;
+//        if (towerX<-newWidth) {
+//            towerX = 0;
+//        }
+//        canvas.drawBitmap(tower, towerX+newWidth, 0,null);
 
 
         //Падение вниз только когда нажали
@@ -274,27 +287,49 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         }
 
-        positionY += velocityY;
+/*        //Ground
+        if (positionY < screenHeight - screenHeight/4) {
+            velocityY-=velocityY;
+        }
+        else{
+            positionY += velocityY;
+        }*/
+
+        //positionY += velocityY;
 
 
         //TODO Сделать подвеску
 
 //        velocityY += accelerationY;
         // Only accelerate velocityY when it is not too large
-        if (velocityY <= 10.0F) {
-            velocityY += accelerationY; //вниз
-        }
+
+//        if (velocityY <= 10.0F) {
+//            velocityY += accelerationY; //вниз
+//        }
 
         // Update the data for the pipes
         for (Pipe pipe : pipeList) {
             pipe.setPositionX(pipe.getPositionX() - pipeVelocity);
         }
+        // Меняем скорость движения каждые 15 сек
+/*        if (iteratorInt == interval*100)
+        {
+            pipeVelocity = pipeVelocity*2; //new Random().nextFloat();
+            //addPipe();
+            iteratorInt = 0;
+        }
+        else*/
         if (iteratorInt == interval) {
+
+            //interval = interval* new Random().nextInt();
+            //pipeVelocity = pipeVelocity*2; //new Random().nextFloat();
+
             addPipe();
             iteratorInt = 0;
         } else {
             iteratorInt++;
         }
+
     }
 
     @Override
@@ -337,8 +372,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean isAlive() {
         // Check if the bird hits the pipes
         //TODO цикл "пока живой" переделать в цикл режима Круиз
+
+
         for (Pipe pipe : pipeList) {
-            if (
+/*            if (
                 // Коллизизия - подогнать размеры, здесь из расчета модельки 100x100dp
                     (pipe.getPositionX() >= measuredWidth / 2.0f - pipeWidth / 2.0f - resizedCarWidth / 2.0f) &&
                             (pipe.getPositionX() <= measuredWidth / 2.0f + pipeWidth / 2.0f + resizedCarWidth / 2.0f)
@@ -346,7 +383,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 if (
                     //TODO 50.0f нужно поменяьт на другое значение (макс высоту модельки машины)
                     //(positionY <= measuredHeight - pipe.getHeight() - gap + 50.0f / 2.0f) //||
-                        (positionY >= measuredHeight - pipe.getHeight() - 50.0f / 2.0f) //Только нижняя
+//                        (positionY >= measuredHeight - pipe.getHeight() - 50.0f / 2.0f) //Только нижняя
+                        (positionY >= measuredHeight - pipe.getHeight() - resizedCarWidth / 4.0f) //Только нижняя
                 ) {
                     return false;
                 } else {
@@ -362,7 +400,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         }
                     }
                 }
-            }
+            }*/
         }
 
         // Check if the car goes beyond the border
@@ -423,8 +461,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Adds a pipe into the list of pipes.
      */
     private void addPipe() {
-        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f,
-                base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
+        pipeList.add(new Pipe(measuredWidth + pipeWidth / 2.0f, base));
+//                base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
 //                base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
     }
 

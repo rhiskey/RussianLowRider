@@ -1,6 +1,5 @@
 package com.example.russianlowrider;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -36,7 +35,7 @@ public class GameActivity extends AppCompatActivity {
 
     private Timer timer;
 
-    @SuppressLint("HandlerLeak")
+//TODO пиздец утечка памяти, нужно переделать нормально
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message message) {
@@ -92,7 +91,6 @@ public class GameActivity extends AppCompatActivity {
         }
     };
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,11 +108,12 @@ public class GameActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, R.raw.sound_score);
         mediaPlayer.setLooping(false);
 
-        //.menuMusic.stop();
-        bgMusic = MediaPlayer.create(this, R.raw.moon_dust);
-        bgMusic.setLooping(true);
+//        //.menuMusic.stop();
 
-        bgMusic.start();
+//        bgMusic = MediaPlayer.create(this, R.raw.moon_dust);
+//        bgMusic.setLooping(true);
+//
+//        bgMusic.start();
 
         // Set the Timer
         isSetNewTimerThreadEnabled = true;
@@ -203,8 +202,8 @@ public class GameActivity extends AppCompatActivity {
         isSetNewTimerThreadEnabled = false;
 
 
-        bgMusic.stop();
-        bgMusic.seekTo(0);
+//        bgMusic.stop();
+//        bgMusic.seekTo(0);
 
         super.onDestroy();
     }
@@ -212,7 +211,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         isSetNewTimerThreadEnabled = false;
-        bgMusic.pause();
+//        bgMusic.pause();
         super.onPause();
     }
 
@@ -220,8 +219,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onRestart() {
 
         super.onRestart();
-        bgMusic.seekTo(0);
-        bgMusic.start();
+//        bgMusic.seekTo(0);
+//        bgMusic.start();
     }
 
     /**
@@ -277,8 +276,8 @@ public class GameActivity extends AppCompatActivity {
         });
         setNewTimerThread.start();
 
-        bgMusic.seekTo(0);
-        bgMusic.start();
+//        bgMusic.seekTo(0);
+//        bgMusic.start();
     }
 
     @Override
