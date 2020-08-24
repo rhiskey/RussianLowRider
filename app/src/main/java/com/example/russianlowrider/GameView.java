@@ -163,7 +163,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         newWidth = (int) (ratio * screenHeight);
 
         bgGame = Bitmap.createScaledBitmap(bgGame, newWidth, newHeight, false);
-        cloud = Bitmap.createScaledBitmap(cloud, newWidth, newHeight, false);
+        cloud = Bitmap.createScaledBitmap(cloud, newWidth / 2, newHeight / 2, false);
 //        tower = Bitmap.createScaledBitmap(tower, newWidth, newHeight, false);
 //        asphalt = Bitmap.createScaledBitmap(asphalt, newWidth, newHeight, false);
 //
@@ -254,6 +254,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         removeItemsFromPipeList(removeList);
+
+        // Рисуем асфальт
+
+        // рисуем прямоугольник
+        // левая верхняя точка (200,150), нижняя правая (400,200)
+        canvas.drawRect(0, screenHeight - screenHeight / 4, screenWidth, screenHeight, paint);
 
         surfaceHolder.unlockCanvasAndPost(canvas);
 
