@@ -36,7 +36,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final float base = 100.0f;
     private static final float pipeVelocity = 3.0f;
     private static boolean isJumpPressed = false;
-    public float floorHeight = 0 - 64;
+
     private float measuredWidth;
     private float measuredHeight;
     private SurfaceHolder surfaceHolder;
@@ -45,20 +45,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap bitmap;
     // The current score
     private int score = 0;
-    // For the bird
+    // For the волга
     private float positionX = 0.0f;
     private float positionY = 0.0f;
-    private float velocityX = 0.0f;
     private float velocityY = 0.0f;
-    private float accelerationX = 0.0f;
-    ; //По часовой
     private float accelerationY = 0.7f;
-    ; //Против
-    private float rotationCW = 0; //По часовой
-    private float rotationCCW = 0; //Против
-    private float omegaCW = 0.0f;
-    private float omegaCCW = 0.0f;
-    // For the pipes
+
+    // For the лежаки
     private int iteratorInt = 0;
     private float pipeWidth = 100.0f;
     private List<Pipe> pipeList;
@@ -88,9 +81,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            assert drawable != null;
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
+        assert drawable != null;
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                 drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -126,13 +121,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setAntiAlias(true);
         paintUp = new Paint();
         paintUp.setAntiAlias(true);
-        // For the bird
+        // For the волга
         bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.deloan_red_01);
         //100 100 false
         bitmap = Bitmap.createScaledBitmap(bitmap, 250, 100, true);
 
-        // For the pipes
-        pipeList = new ArrayList<Pipe>();
+        // For the лежак
+        pipeList = new ArrayList<>();
 
         setKeepScreenOn(true);
     }
@@ -150,12 +145,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Clear the canvas
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-        // Draw the bird
+        // Draw the car
         canvas.drawBitmap(bitmap, positionX - 100.0f / 2.0f, positionY - 100.0f / 2.0f, null);
 
-        // Draw the pipes
+        // Draw the лежаки
         paint.setColor(colorPipe);
         paintUp.setColor(colorPipeUp);
+
         List<Integer> removeList = new ArrayList<>();
         int size = pipeList.size();
         for (int index = 0; index < size; index++) {
@@ -182,8 +178,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         surfaceHolder.unlockCanvasAndPost(canvas);
 
-        // Update the data for the bird
-        positionX += velocityX;
+        // Update the data for the car
 
 
         //Падение вниз только когда нажали
@@ -192,15 +187,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             //velocityY -= 13.0f;
             isJumpPressed = false;
 
-        } else {
         }
 
         positionY += velocityY;
 
-        velocityX += accelerationX;
-//TODO на вращение забиваем
-        rotationCCW += omegaCCW;
-        rotationCW += omegaCW;
+
+        //TODO Сделать подвеску
 
 //        velocityY += accelerationY;
         // Only accelerate velocityY when it is not too large
@@ -243,9 +235,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         isJumpPressed = true;
     }
 
-    public void setRotation(float rotateCW, float rotateCCW) {
-        this.omegaCW = rotateCW;
-        this.omegaCCW = rotateCCW;
+    public void setPneumo() {
+
     }
 
     public void setPosition(float positionX, float positionY) {
@@ -288,11 +279,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         // Check if the bird goes beyond the border
-        if ((positionY < 0.0f + 100.0f / 2.0f) || (positionY > measuredHeight - 100.0f / 2.0f)) {
-            return false;
-        }
-
-        return true;
+        return (!(positionY < 0.0f + 100.0f / 2.0f)) && (!(positionY > measuredHeight - 100.0f / 2.0f));
     }
 
     /**
@@ -329,14 +316,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // For the bird
         positionX = 0.0f;
         positionY = 0.0f;
-        velocityX = 0.0f;
         velocityY = 0.0f;
-        accelerationX = 0.0f;
         accelerationY = 0.7f;
-
-        omegaCCW = 0.0f;
-        omegaCW = 0.0f;
-
 
         // For the pipes
         iteratorInt = 0;
