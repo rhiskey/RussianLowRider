@@ -24,12 +24,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        android:background="@color/cardview_shadow_end_color"
+        android:background="?android:attr/panelBackground"
         android:text="@string/scoreInGame"
         android:textColor="#EEE6E6E6"
         android:textSize="40sp" />
 
     <LinearLayout
+        android:id="@+id/linearLayoutBtns"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"

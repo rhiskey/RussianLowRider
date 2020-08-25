@@ -9,10 +9,10 @@ import android.graphics.drawable.Drawable;
 
 import com.example.russianlowrider.GameView;
 
-public class inGameButtons extends View {
+public class InGameButtons extends View {
     static int h, w;
 
-    public inGameButtons(Context context) {
+    public InGameButtons(Context context) {
         super(context);
     }
 

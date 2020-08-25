@@ -13,8 +13,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,73 +27,92 @@ public class GameActivity extends AppCompatActivity {
     // The what values of the messages
     private static final int UPDATE = 0x00;
     private static final int RESET_SCORE = 0x01;
-    private GameView gameView;
+
+    private static com.example.russianlowrider.GameView gameView;
     private TextView textViewScore;
-    private boolean isGameOver;
+    private LinearLayout inGameButtons;
+
+    private static boolean isGameOver;
     private boolean isSetNewTimerThreadEnabled;
 
     private Thread setNewTimerThread;
-    private AlertDialog.Builder alertDialog;
+    private static AlertDialog.Builder alertDialog;
     private MediaPlayer mediaPlayer;
     private MediaPlayer bgMusic;
 
-    private Timer timer;
+    private static Timer timer;
 
-//TODO пиздец утечка памяти, нужно переделать нормально
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message message) {
-            switch (message.what) {
-                case UPDATE: {
-                    if (gameView.isAlive()) {
-                        isGameOver = false;
-                        gameView.update();
-                    } else {
-                        if (isGameOver) {
-                            break;
+    // Жизненный цикл игры
+    private static class GameHandler extends Handler {
+        //Используем слабую ссылку референс , чтобы не прерывать сборку мусора
+        private final WeakReference<GameActivity> GameClassWeakReference;
+
+        public GameHandler(GameActivity myClassInstance) {
+            GameClassWeakReference = new WeakReference<GameActivity>(myClassInstance);
+        }
+
+        // Handler handler =
+        public void handleMessage(@NotNull Message message) {
+            final GameActivity GameClass = GameClassWeakReference.get();
+            if (GameClass != null) {
+                switch (message.what) {
+                    case UPDATE: {
+                        if (gameView.isCanDrive()) {
+                            isGameOver = false;
+                            gameView.update();
                         } else {
-                            isGameOver = true;
+                            if (isGameOver) {
+                                break;
+                            } else {
+                                isGameOver = true;
+                            }
+                            // Cancel the timer
+                            timer.cancel();
+                            timer.purge();
+
+
+                            alertDialog = new AlertDialog.Builder(GameClass);
+                            alertDialog.setTitle("GAME OVER");
+                            alertDialog.setMessage("Score: " + gameView.getScore() +
+                                    "\n" + "Would you like to RESTART?");
+                            alertDialog.setCancelable(false);
+                            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    GameClass.restartGame();
+                                }
+                            });
+                            alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    GameClass.onBackPressed();
+                                }
+                            });
+                            alertDialog.show();
                         }
-                        // Cancel the timer
-                        timer.cancel();
-                        timer.purge();
 
-
-                        alertDialog = new AlertDialog.Builder(GameActivity.this);
-                        alertDialog.setTitle("GAME OVER");
-                        alertDialog.setMessage("Score: " + gameView.getScore() +
-                                "\n" + "Would you like to RESTART?");
-                        alertDialog.setCancelable(false);
-                        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                GameActivity.this.restartGame();
-                            }
-                        });
-                        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                GameActivity.this.onBackPressed();
-                            }
-                        });
-                        alertDialog.show();
+                        break;
                     }
 
-                    break;
-                }
+                    case RESET_SCORE: {
+                        GameClass.textViewScore.setText("0");
 
-                case RESET_SCORE: {
-                    textViewScore.setText("0");
+                        break;
+                    }
 
-                    break;
-                }
-
-                default: {
-                    break;
+                    default: {
+                        break;
+                    }
                 }
             }
         }
-    };
+    }
+
+    private final GameHandler handler = new GameHandler(this);
+
+    public GameHandler getHandler() {
+        return new GameHandler(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +131,7 @@ public class GameActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, R.raw.sound_score);
         mediaPlayer.setLooping(false);
 
-//        //.menuMusic.stop();
-
+        //TODO МУЗЫКУ ПОЖАТЬ ШАКАЛАМИ ДО 30 сек
 //        bgMusic = MediaPlayer.create(this, R.raw.moon_dust);
 //        bgMusic.setLooping(true);
 //
@@ -134,34 +156,14 @@ public class GameActivity extends AppCompatActivity {
         });
         setNewTimerThread.start();
 
-        // Jump listener
-        gameView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        gameView.jump();
-
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-
-
-                        break;
-
-                    default:
-                        break;
-                }
-
-                return true;
-            }
-        });
+        //Buttons Listener
 
     }
 
     private void initViews() {
         gameView = findViewById(R.id.game_view);
         textViewScore = findViewById(R.id.text_view_score);
+        inGameButtons = findViewById(R.id.linearLayoutBtns);
     }
 
     /**
@@ -174,17 +176,17 @@ public class GameActivity extends AppCompatActivity {
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-
+            //Handler handler = new GameHandler();
             @Override
             public void run() {
                 // Send the message to the handler to update the UI of the GameView
-                GameActivity.this.handler.sendEmptyMessage(UPDATE);
+                handler.sendEmptyMessage(UPDATE);
 
                 // For garbage collection
                 System.gc();
             }
-
-        }, 0, 17);
+//TODO стояло 17, что за период?ы
+        }, 0, 5);
     }
 
     @Override
@@ -194,10 +196,6 @@ public class GameActivity extends AppCompatActivity {
             timer.purge();
         }
 
-/*        if (audioRecorder != null) {
-            audioRecorder.isGetVoiceRun = false;
-            audioRecorder = null;
-        }*/
 
         isSetNewTimerThreadEnabled = false;
 
@@ -248,7 +246,7 @@ public class GameActivity extends AppCompatActivity {
 
         // Refresh the TextView for displaying the score
         new Thread(new Runnable() {
-
+            //Handler handler = new GameHandler();
             @Override
             public void run() {
                 handler.sendEmptyMessage(RESET_SCORE);
@@ -292,16 +290,18 @@ public class GameActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    //TODO забить на хуйню с вращением, сделать именно механику с высотой
+    //TODO забить на хуйню с вращением, сделать именно механику с высотой, это дело перенести в
+    //GameVIEW
+/*
     public void onLeftBtnClick(View view) {
         //Поднять зад пневму
-        gameView.setPneumo();
+        //gameView.setPneumo();
     }
 
     public void onRightBtnClick(View view) {
         //Поднять перед пневму
-        gameView.setPneumo();
-    }
+        //gameView.setPneumo();
+    }*/
 
 
 }

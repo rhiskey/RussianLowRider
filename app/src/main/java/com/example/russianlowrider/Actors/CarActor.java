@@ -1,4 +1,4 @@
-package com.example.russianlowrider.domain;
+package com.example.russianlowrider.Actors;
 
 public class CarActor {
     //TODO Вынести логику машинки из GameView в этот класс

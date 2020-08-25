@@ -1,4 +1,4 @@
-package com.example.russianlowrider.domain;
+package com.example.russianlowrider.Actors;
 
 import android.graphics.Canvas;
 import android.media.Image;
