@@ -144,7 +144,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Clear the canvas
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-        //TODO отрисовать плавно новые справа склеивать
+        //TODO Вызывает перегруз памяти
 /*        bgGameX -= 1;
         if (bgGameX < -newWidth) {
             bgGameX = 0;

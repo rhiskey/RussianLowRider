@@ -69,7 +69,7 @@ public class GameActivity extends AppCompatActivity {
                 handlerRun.run();
             }
 
-//TODO стояло 17, что за период?ы
+//TODO  Время обновления игры
         }, 0, 17);
 
     }
