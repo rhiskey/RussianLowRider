@@ -79,6 +79,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+
     private void init() {
         //Задаем вид
         surfaceHolder = getHolder();
@@ -160,23 +161,45 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
             //TODO Переделать "склейку фона"
-/*            bgGameX -= 1;
-            if (bgGameX < -newWidth) {
-                bgGameX = 0;
-            }
-            canvas.drawBitmap(bgGame, bgGameX, 0, null);
-            if (bgGameX < screenWidth - newWidth) {
-                canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
-            }
 
+            // decrement the far background
+            bgGameX -= 1;
             cloudX -= 2; //Чем больше число тем быстрее
-            if (cloudX < -newWidth) {
-                cloudX = 0;
-            }
-            canvas.drawBitmap(clouds, cloudX, 0, null);
-            if (cloudX < screenWidth - newWidth) {
-                canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
-            }*/
+//
+//            int newFarX = bgGame.getWidth() - (-bgGameX);
+//
+//            // if we have scrolled all the way, reset to start
+//            if (newFarX <= 0) {
+//                bgGameX = 0;
+//                cloudX = 0;
+//                // only need one draw
+//                canvas.drawBitmap(bgGame, bgGameX, 0, null);
+//                canvas.drawBitmap(clouds, cloudX, 0, null);
+//            } else {
+//                // need to draw original and wrap
+//                canvas.drawBitmap(bgGame, bgGameX, 0, null);
+//                canvas.drawBitmap(bgGame, newFarX, 0, null);
+//
+//                canvas.drawBitmap(clouds, cloudX, 0, null);
+//                canvas.drawBitmap(clouds, newFarX, 0, null);
+//            }
+//
+//            if (bgGameX < -newWidth) {
+//                bgGameX = 0;
+//            }
+//            canvas.drawBitmap(bgGame, bgGameX, 0, null);
+//            if (bgGameX < screenWidth - newWidth) {
+//                canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
+//            }
+
+//            cloudX -= 2; //Чем больше число тем быстрее
+//            if (cloudX < -newWidth) {
+//                cloudX = 0;
+//            }
+//            canvas.drawBitmap(clouds, cloudX, 0, null);
+//            if (cloudX < screenWidth - newWidth) {
+//                canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
+//            }
 
             // Рисуем асфальт
             // рисуем прямоугольник
