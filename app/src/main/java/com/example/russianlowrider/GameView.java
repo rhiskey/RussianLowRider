@@ -138,40 +138,56 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-
         Canvas canvas = surfaceHolder.lockCanvas();
-
-        // Clear the canvas
-        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-
         //TODO Вызывает перегруз памяти
-/*        bgGameX -= 1;
-        if (bgGameX < -newWidth) {
-            bgGameX = 0;
-        }
-        canvas.drawBitmap(bgGame, bgGameX, 0, null);
-        if (bgGameX < screenWidth - newWidth) {
-            canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
-        }
+        AnimateBG abg = new AnimateBG(canvas);
+        //getHandler().post(abg);
+        abg.run();
 
-        cloudX -= 2; //Чем больше число тем быстрее
-        if (cloudX < -newWidth) {
-            cloudX = 0;
-        }
-        canvas.drawBitmap(clouds, cloudX, 0, null);
-        if (cloudX < screenWidth - newWidth) {
-            canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
-        }*/
-
-        // Рисуем асфальт
-        // рисуем прямоугольник
-        // левая верхняя точка (200,150), нижняя правая (400,200)
-        canvas.drawRect(0, groundPosition, screenWidth, screenHeight, aspPaint);
-
-        //Рисуем авто
-        canvas.drawBitmap(car, screenWidth / 4.0f - resizedCarWidth / 2.0f, groundPosition - resizedCarHeight, null);
         surfaceHolder.unlockCanvasAndPost(canvas);
 
+    }
+
+    public class AnimateBG implements Runnable {
+        private Canvas canvas;
+
+        public AnimateBG(Canvas _canvas) {
+            this.canvas = _canvas;
+        }
+
+        public void run() {
+            // Clear the canvas
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
+            //TODO Переделать "склейку фона"
+/*            bgGameX -= 1;
+            if (bgGameX < -newWidth) {
+                bgGameX = 0;
+            }
+            canvas.drawBitmap(bgGame, bgGameX, 0, null);
+            if (bgGameX < screenWidth - newWidth) {
+                canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
+            }
+
+            cloudX -= 2; //Чем больше число тем быстрее
+            if (cloudX < -newWidth) {
+                cloudX = 0;
+            }
+            canvas.drawBitmap(clouds, cloudX, 0, null);
+            if (cloudX < screenWidth - newWidth) {
+                canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
+            }*/
+
+            // Рисуем асфальт
+            // рисуем прямоугольник
+            // левая верхняя точка (200,150), нижняя правая (400,200)
+            canvas.drawRect(0, groundPosition, screenWidth, screenHeight, aspPaint);
+
+            //Рисуем авто
+            canvas.drawBitmap(car, screenWidth / 4.0f - resizedCarWidth / 2.0f, groundPosition - resizedCarHeight, null);
+
+
+        }
     }
 
     public int getScore() {
