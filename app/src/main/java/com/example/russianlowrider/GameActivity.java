@@ -42,70 +42,36 @@ public class GameActivity extends AppCompatActivity {
 
     private static Timer timer;
 
-    // Жизненный цикл игры
-    private static class GameHandler extends Handler {
-        //Используем слабую ссылку референс , чтобы не прерывать сборку мусора
-        private final WeakReference<GameActivity> GameClassWeakReference;
-
-        public GameHandler(GameActivity myClassInstance) {
-            GameClassWeakReference = new WeakReference<GameActivity>(myClassInstance);
+    /**
+     * Sets the Timer to update the UI of the GameView.
+     */
+    private void setNewTimer() {
+        if (!isSetNewTimerThreadEnabled) {
+            return;
         }
 
-        // Handler handler =
-        public void handleMessage(@NotNull Message message) {
-            final GameActivity GameClass = GameClassWeakReference.get();
-            if (GameClass != null) {
-                switch (message.what) {
-                    case UPDATE: {
-                        if (gameView.isCanDrive()) {
-                            isGameOver = false;
-                            gameView.update();
-                        } else {
-                            if (isGameOver) {
-                                break;
-                            } else {
-                                isGameOver = true;
-                            }
-                            // Cancel the timer
-                            timer.cancel();
-                            timer.purge();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            //Handler handler = new GameHandler();
+            public Runnable handlerRun = new Runnable() {
+                @Override
+                public void run() {
+                    // Send the message to the handler to update the UI of the GameView
+                    handler.sendEmptyMessage(UPDATE);
 
-
-                            alertDialog = new AlertDialog.Builder(GameClass);
-                            alertDialog.setTitle("GAME OVER");
-                            alertDialog.setMessage("Score: " + gameView.getScore() +
-                                    "\n" + "Would you like to RESTART?");
-                            alertDialog.setCancelable(false);
-                            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    GameClass.restartGame();
-                                }
-                            });
-                            alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    GameClass.onBackPressed();
-                                }
-                            });
-                            alertDialog.show();
-                        }
-
-                        break;
-                    }
-
-                    case RESET_SCORE: {
-                        GameClass.textViewScore.setText("0");
-
-                        break;
-                    }
-
-                    default: {
-                        break;
-                    }
+                    // For garbage collection
+                    System.gc();
                 }
+            };
+
+            @Override
+            public void run() {
+                handlerRun.run();
             }
-        }
+
+//TODO стояло 17, что за период?ы
+        }, 0, 17);
+
     }
 
     private final GameHandler handler = new GameHandler(this);
@@ -166,27 +132,80 @@ public class GameActivity extends AppCompatActivity {
         inGameButtons = findViewById(R.id.linearLayoutBtns);
     }
 
-    /**
-     * Sets the Timer to update the UI of the GameView.
-     */
-    private void setNewTimer() {
-        if (!isSetNewTimerThreadEnabled) {
-            return;
+    // Жизненный цикл игры
+    private static class GameHandler extends Handler {
+        //Используем слабую ссылку референс , чтобы не прерывать сборку мусора
+        private final WeakReference<GameActivity> GameClassWeakReference;
+
+        public GameHandler(GameActivity myClassInstance) {
+            GameClassWeakReference = new WeakReference<GameActivity>(myClassInstance);
         }
 
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            //Handler handler = new GameHandler();
-            @Override
-            public void run() {
-                // Send the message to the handler to update the UI of the GameView
-                handler.sendEmptyMessage(UPDATE);
+        // Handler handler =
+        public void handleMessage(@NotNull final Message message) {
+            //В отдельный поток
+            //Runnable handler = new Runnable() {
+//                    @Override
+//                    public void run() {
 
-                // For garbage collection
-                System.gc();
+            final GameActivity GameClass = GameClassWeakReference.get();
+            if (GameClass != null) {
+                switch (message.what) {
+                    case UPDATE: {
+                        if (gameView.isCanDrive()) {
+                            isGameOver = false;
+                            gameView.update();
+                        } else {
+                            if (isGameOver) {
+                                break;
+                            } else {
+                                isGameOver = true;
+                            }
+                            // Cancel the timer
+                            timer.cancel();
+                            timer.purge();
+
+
+                            alertDialog = new AlertDialog.Builder(GameClass);
+                            alertDialog.setTitle("GAME OVER");
+                            alertDialog.setMessage("Score: " + gameView.getScore() +
+                                    "\n" + "Would you like to RESTART?");
+                            alertDialog.setCancelable(false);
+                            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    GameClass.restartGame();
+                                }
+                            });
+                            alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    GameClass.onBackPressed();
+                                }
+                            });
+                            alertDialog.show();
+                        }
+
+                        break;
+                    }
+
+                    case RESET_SCORE: {
+                        GameClass.textViewScore.setText("0");
+
+                        break;
+                    }
+
+                    default: {
+                        break;
+                    }
+                }
             }
-//TODO стояло 17, что за период?ы
-        }, 0, 5);
+
+//                    }
+            // };
+            //handler.run();
+        }
+
     }
 
     @Override

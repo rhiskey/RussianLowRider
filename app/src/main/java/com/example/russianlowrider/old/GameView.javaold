@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.russianlowrider.R;
-import com.example.russianlowrider.domain.Pipe;
+import com.example.russianlowrider.old.domain.Pipe;
 
 import java.util.ArrayList;
 import java.util.List;

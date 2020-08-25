@@ -1,4 +1,4 @@
-package com.example.russianlowrider.domain;
+package com.example.russianlowrider.old.domain;
 
 public class Pipe {
 

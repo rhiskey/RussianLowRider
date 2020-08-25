@@ -15,6 +15,13 @@ import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+
+class GameEvents {
+    public static void update() {
+        System.out.println("First");
+    }
+}
+
 //Класс расширяет вью на поверхность
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder;
@@ -34,6 +41,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //Очки
     int score = 0;
+
 
     public GameView(Context context) {
         super(context);
@@ -137,7 +145,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         //TODO отрисовать плавно новые справа склеивать
-        bgGameX -= 1;
+/*        bgGameX -= 1;
         if (bgGameX < -newWidth) {
             bgGameX = 0;
         }
@@ -153,7 +161,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(clouds, cloudX, 0, null);
         if (cloudX < screenWidth - newWidth) {
             canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
-        }
+        }*/
 
         // Рисуем асфальт
         // рисуем прямоугольник
@@ -176,4 +184,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //TODO чистим переменные
         score = 0;
     }
+
+
 }
