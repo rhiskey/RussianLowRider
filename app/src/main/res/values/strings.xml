@@ -7,4 +7,5 @@
     <string name="leftInGameButton">leftInGameButton</string>
     <string name="rightInGameButton">rightInGameButton</string>
     <string name="scoreInGame">0</string>
+    <string name="background_for_the_game">Background for the game</string>
 </resources>

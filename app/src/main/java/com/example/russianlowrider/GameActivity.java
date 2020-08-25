@@ -1,5 +1,6 @@
 package com.example.russianlowrider;
 
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -130,6 +133,24 @@ public class GameActivity extends AppCompatActivity {
         gameView = findViewById(R.id.game_view);
         textViewScore = findViewById(R.id.text_view_score);
         inGameButtons = findViewById(R.id.linearLayoutBtns);
+
+/*        final ImageView backgroundCity = (ImageView) findViewById(R.id.background_City);
+        final ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(10000L);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                final float progress = (float) animation.getAnimatedValue();
+                final float width = backgroundCity.getWidth();
+                final float translationX = width * progress;
+                backgroundCity.setTranslationX(translationX);
+                //backgroundTwo.setTranslationX(translationX - width);
+            }
+        });
+        animator.start();*/
+
     }
 
     // Жизненный цикл игры
@@ -155,6 +176,7 @@ public class GameActivity extends AppCompatActivity {
                         if (gameView.isCanDrive()) {
                             isGameOver = false;
                             gameView.update();
+
                         } else {
                             if (isGameOver) {
                                 break;

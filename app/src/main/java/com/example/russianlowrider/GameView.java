@@ -1,5 +1,6 @@
 package com.example.russianlowrider;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,6 +15,8 @@ import android.util.AttributeSet;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 
 
 class GameEvents {
@@ -152,19 +155,39 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public class AnimateBG implements Runnable {
         private Canvas canvas;
 
+
         public AnimateBG(Canvas _canvas) {
             this.canvas = _canvas;
         }
 
         public void run() {
             // Clear the canvas
+
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
 
             //TODO Переделать "склейку фона"
 
             // decrement the far background
             bgGameX -= 1;
             cloudX -= 2; //Чем больше число тем быстрее
+
+/*            final ImageView backgroundCity = (ImageView) findViewById(R.id.background_City);
+            final ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            animator.setRepeatCount(ValueAnimator.INFINITE);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.setDuration(10000L);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    final float progress = (float) animation.getAnimatedValue();
+                    final float width = backgroundCity.getWidth();
+                    final float translationX = width * progress;
+                    backgroundCity.setTranslationX(translationX);
+                    //backgroundTwo.setTranslationX(translationX - width);
+                }
+            });
+            animator.start();*/
 //
 //            int newFarX = bgGame.getWidth() - (-bgGameX);
 //
@@ -184,22 +207,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //                canvas.drawBitmap(clouds, newFarX, 0, null);
 //            }
 //
-//            if (bgGameX < -newWidth) {
-//                bgGameX = 0;
-//            }
-//            canvas.drawBitmap(bgGame, bgGameX, 0, null);
-//            if (bgGameX < screenWidth - newWidth) {
-//                canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
-//            }
+            if (bgGameX < -newWidth) {
+                bgGameX = 0;
+            }
+            canvas.drawBitmap(bgGame, bgGameX, 0, null);
+            if (bgGameX < screenWidth - newWidth) {
+                canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
+            }
 
-//            cloudX -= 2; //Чем больше число тем быстрее
-//            if (cloudX < -newWidth) {
-//                cloudX = 0;
-//            }
-//            canvas.drawBitmap(clouds, cloudX, 0, null);
-//            if (cloudX < screenWidth - newWidth) {
-//                canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
-//            }
+
+            if (cloudX < -newWidth) {
+                cloudX = 0;
+            }
+            canvas.drawBitmap(clouds, cloudX, 0, null);
+            if (cloudX < screenWidth - newWidth) {
+                canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
+            }
 
             // Рисуем асфальт
             // рисуем прямоугольник
@@ -208,6 +231,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             //Рисуем авто
             canvas.drawBitmap(car, screenWidth / 4.0f - resizedCarWidth / 2.0f, groundPosition - resizedCarHeight, null);
+
+            //Отрисовать кнопки поверх всего
 
 
         }

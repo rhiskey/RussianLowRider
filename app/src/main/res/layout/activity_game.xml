@@ -9,65 +9,78 @@
 
     <!-- The TextView to display the score -->
 
-    <SurfaceView
+    <ImageView
+        android:id="@+id/background_City"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_streets_of_rage" />
+        android:contentDescription="@string/background_for_the_game"
+        app:srcCompat="@drawable/bg_streets_of_rage" />
 
-    <com.example.russianlowrider.GameView
-        android:id="@+id/game_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_view_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="32dp"
-        android:background="?android:attr/panelBackground"
-        android:text="@string/scoreInGame"
-        android:textColor="#EEE6E6E6"
-        android:textSize="40sp" />
+        <SurfaceView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_streets_of_rage" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutBtns"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-        android:visibility="invisible">
+        <com.example.russianlowrider.GameView
+            android:id="@+id/game_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <ImageButton
-            android:id="@+id/imgBTN_left"
+        <TextView
+            android:id="@+id/text_view_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="25dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_weight="1"
-            android:alpha="0.9"
-            android:contentDescription="@string/leftInGameButton"
-            android:focusableInTouchMode="false"
-            android:onClick="onLeftBtnClick"
-            app:srcCompat="@android:drawable/stat_sys_download" />
+            android:layout_margin="32dp"
+            android:background="?android:attr/panelBackground"
+            android:text="@string/scoreInGame"
+            android:textColor="#EEE6E6E6"
+            android:textSize="40sp" />
 
-        <ImageButton
-            android:id="@+id/imgBTN_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="25dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:alpha="0.9"
-            android:contentDescription="@string/rightInGameButton"
-            android:focusableInTouchMode="false"
-            android:onClick="onRightBtnClick"
-            app:srcCompat="@android:drawable/stat_sys_upload" />
+        <LinearLayout
+            android:id="@+id/linearLayoutBtns"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/imgBTN_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="25dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_weight="1"
+                android:alpha="0.9"
+                android:contentDescription="@string/leftInGameButton"
+                android:focusableInTouchMode="false"
+                android:onClick="onLeftBtnClick"
+                app:srcCompat="@android:drawable/stat_sys_download" />
+
+            <ImageButton
+                android:id="@+id/imgBTN_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="25dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:alpha="0.9"
+                android:contentDescription="@string/rightInGameButton"
+                android:focusableInTouchMode="false"
+                android:onClick="onRightBtnClick"
+                app:srcCompat="@android:drawable/stat_sys_upload" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>

@@ -47,7 +47,7 @@ public class StartingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //Повернули
+/*    //Повернули
     @Override
     public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -63,5 +63,5 @@ public class StartingActivity extends AppCompatActivity {
         // or ROTATION_270.
         int newScreenRotation = getWindowManager().getDefaultDisplay()
                 .getRotation();
-    }
+    }*/
 }
