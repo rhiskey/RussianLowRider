@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_touch"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,9 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/background_for_the_game"
-        app:srcCompat="@drawable/bg_streets_of_rage" />
+        android:visibility="invisible"
+        app:srcCompat="@drawable/bg_streets_of_rage"
+        tools:visibility="invisible" />
 
     <RelativeLayout
+        android:id="@+id/RL_ActivityGame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -24,6 +28,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bg_streets_of_rage" />
+
+        <ImageView
+            android:id="@+id/bg1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:contentDescription="background1"
+            app:srcCompat="@drawable/bg_streets_of_rage" />
+
+        <ImageView
+            android:id="@+id/bg2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:contentDescription="bg2"
+            app:srcCompat="@drawable/bg_streets_of_rage" />
 
         <com.example.russianlowrider.GameView
             android:id="@+id/game_view"
@@ -47,7 +67,7 @@
             android:layout_marginTop="0dp"
             android:gravity="bottom|center_horizontal"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <ImageButton
                 android:id="@+id/imgBTN_left"

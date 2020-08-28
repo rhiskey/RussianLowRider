@@ -2,7 +2,7 @@
     <string name="app_name">RussianLowRider</string>
     <string name="leftBtnText">Задняя ось</string>
     <string name="rightBtnText">Передняя ось</string>
-    <string name="play">Play</string>
+    <string name="play">Выкатить бричку</string>
     <string name="applogo">AppLogo</string>
     <string name="leftInGameButton">leftInGameButton</string>
     <string name="rightInGameButton">rightInGameButton</string>

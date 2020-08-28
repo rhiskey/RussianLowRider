@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -41,11 +42,14 @@ public class StartingActivity extends AppCompatActivity {
         menuMusic.start();*/
     }
 
+    // Нажали кнопку Старт
     public void goToTouchActivity(View view) {
+
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("Mode", "Touch");
         startActivity(intent);
     }
+
 
 /*    //Повернули
     @Override

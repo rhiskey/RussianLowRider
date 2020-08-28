@@ -41,6 +41,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     //Цвет асфальта
     private static final int colorAsphalt = Color.parseColor("#2A2922");
     private Paint aspPaint = new Paint();
+    private boolean isLeftPneumaPressed, isRightPneumaPressed;
 
     //Очки
     int score = 0;
@@ -82,6 +83,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    public void performClick(OnClickListener onClickListener) {
+    }
 
     private void init() {
         //Задаем вид
@@ -91,7 +94,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         surfaceHolder.setFormat(PixelFormat.TRANSPARENT);
 
         //Грузим фон, элементы
-        bgGame = BitmapFactory.decodeResource(getResources(), R.drawable.bg_streets_of_rage);
+        //bgGame = BitmapFactory.decodeResource(getResources(), R.drawable.bg_streets_of_rage);
+
         //tower = BitmapFactory.decodeResource(getResources(), R.drawable.towers);
 
         clouds = BitmapFactory.decodeResource(getResources(), R.drawable.clouds);
@@ -120,7 +124,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         newWidth = (int) (ratio * screenHeight);
 
         //Ресайзим
-        bgGame = Bitmap.createScaledBitmap(bgGame, newWidth, newHeight, false);
+        //bgGame = Bitmap.createScaledBitmap(bgGame, newWidth, newHeight, false);
         clouds = Bitmap.createScaledBitmap(clouds, newWidth, newHeight, false);
 //        tower = Bitmap.createScaledBitmap(tower, newWidth, newHeight, false);
 //        asphalt = Bitmap.createScaledBitmap(asphalt, newWidth, newHeight, false);
@@ -143,20 +147,56 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         Canvas canvas = surfaceHolder.lockCanvas();
-        //TODO Вызывает перегруз памяти
-        AnimateBG abg = new AnimateBG(canvas);
+
+        Animate abg = new Animate(canvas);
         //getHandler().post(abg);
         abg.run();
 
+        // Рисуем асфальт
+        // рисуем прямоугольник
+        // левая верхняя точка (200,150), нижняя правая (400,200)
+        canvas.drawRect(0, groundPosition, screenWidth, screenHeight, aspPaint);
+
+        //Рисуем авто, анимируем в зависимости от нажатия на кнопки
+        if (isRightPneumaPressed) {
+            //Анимируем если передняя ось поднимается
+
+            isRightPneumaPressed = false;
+        }
+        if (isLeftPneumaPressed) {
+            //Анимируем если задняя ось поднимается
+
+            isLeftPneumaPressed = false;
+        }
+
+        canvas.drawBitmap(car, screenWidth / 4.0f - resizedCarWidth / 2.0f, groundPosition - resizedCarHeight, null);
+
+        //Отрисовать кнопки поверх всего
         surfaceHolder.unlockCanvasAndPost(canvas);
 
     }
 
-    public class AnimateBG implements Runnable {
+    //Обрабатываем нажатие на левую часть экрана - поднимаем (анимируем) подвеску сзади
+    public void LeftPneumaPressed() {
+        //TODO анимация подъема задней оси
+        //car=;
+        isLeftPneumaPressed = true;
+    }
+
+    //Обрабатываем нажатие на левую часть экрана - поднимаем (анимируем) подвеску передней оси
+    public void RightPneumaPressed() {
+        //TODO анимация подъема передней оси
+        //car=;
+        isRightPneumaPressed = true;
+        //canvas.drawBitmap(car, screenWidth / 4.0f - resizedCarWidth / 2.0f, groundPosition - resizedCarHeight, null);
+    }
+
+
+    public class Animate implements Runnable {
         private Canvas canvas;
 
 
-        public AnimateBG(Canvas _canvas) {
+        public Animate(Canvas _canvas) {
             this.canvas = _canvas;
         }
 
@@ -171,23 +211,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             // decrement the far background
             bgGameX -= 1;
             cloudX -= 2; //Чем больше число тем быстрее
-
-/*            final ImageView backgroundCity = (ImageView) findViewById(R.id.background_City);
-            final ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
-            animator.setRepeatCount(ValueAnimator.INFINITE);
-            animator.setInterpolator(new LinearInterpolator());
-            animator.setDuration(10000L);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    final float progress = (float) animation.getAnimatedValue();
-                    final float width = backgroundCity.getWidth();
-                    final float translationX = width * progress;
-                    backgroundCity.setTranslationX(translationX);
-                    //backgroundTwo.setTranslationX(translationX - width);
-                }
-            });
-            animator.start();*/
 //
 //            int newFarX = bgGame.getWidth() - (-bgGameX);
 //
@@ -207,6 +230,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //                canvas.drawBitmap(clouds, newFarX, 0, null);
 //            }
 //
+
+/*
             if (bgGameX < -newWidth) {
                 bgGameX = 0;
             }
@@ -214,25 +239,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if (bgGameX < screenWidth - newWidth) {
                 canvas.drawBitmap(bgGame, bgGameX + newWidth, 0, null);
             }
+*/
 
 
-            if (cloudX < -newWidth) {
-                cloudX = 0;
-            }
-            canvas.drawBitmap(clouds, cloudX, 0, null);
-            if (cloudX < screenWidth - newWidth) {
-                canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
-            }
-
-            // Рисуем асфальт
-            // рисуем прямоугольник
-            // левая верхняя точка (200,150), нижняя правая (400,200)
-            canvas.drawRect(0, groundPosition, screenWidth, screenHeight, aspPaint);
-
-            //Рисуем авто
-            canvas.drawBitmap(car, screenWidth / 4.0f - resizedCarWidth / 2.0f, groundPosition - resizedCarHeight, null);
-
-            //Отрисовать кнопки поверх всего
+//            if (cloudX < -newWidth) {
+//                cloudX = 0;
+//            }
+//            canvas.drawBitmap(clouds, cloudX, 0, null);
+//            if (cloudX < screenWidth - newWidth) {
+//                canvas.drawBitmap(clouds, cloudX + newWidth, 0, null);
+//            }
 
 
         }
